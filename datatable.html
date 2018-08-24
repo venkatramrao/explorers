@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<!DOCTYPE html>
+<html>
+<head>
+    <title>XYZ Maps Example: Add and remove link feature</title>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.7/paper/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/navbar-fixed-right.min.css">
+    <link rel="stylesheet" href="css/navbar-fixed-left.min.css">
+    <link rel="stylesheet" href="css/docs.css">
+
+    <script src="js/xyz-maps-common.min.js"        type="text/javascript" charset="UTF-8" ></script>
+    <script src="js/xyz-maps-core.min.js"  type="text/javascript" charset="UTF-8" ></script>
+    <script src="js/xyz-maps-display.min.js"      type="text/javascript" charset="UTF-8" ></script>
+    <script src="js/xyz.js"      type="text/javascript" charset="UTF-8" ></script>
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="js/docs.js"></script>
+    <script async defer src="https://buttons.github.io/buttons.js"></script>
+
+    <style type="text/css">
+        #map {
+        position: absolute;
+        overflow: hidden;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        }
+
+        .navbar-inverse{
+        background-color:#123
+        }
+
+        thead tr{
+            background: #123;
+            color: white;
+            text-transform: capitalize;
+        }
+
+    </style>
+</head>
+<body>
+
+<nav class="navbar navbar-inverse navbar-fixed-left">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Explorers</a>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li><a href="#">Home</a></li>
+                <li><a href="#">About</a></li>
+                <li><a href="#">Contact</a></li>
+
+            </ul>
+
+        </div>
+    </div>
+</nav>
+
+<div class="container">
+    <h2>Trail Store</h2>
+    <table id="dataTable" class="table table-dark table-hover">
+        <thead>
+
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+</div>
+
+
+<!-- Modal Fullscreen -->
+<div class="modal fade modal-fullscreen" id="modal-fullscreen" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Trail Preview</h4>
+            </div>
+            <div class="modal-body">
+                <iframe  style="width:100%;height:400px" src="https://xyz.here.com/viewer/?project_id=973754d0-a79d-11e8-8f4a-1922caf302aa"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Subscribe</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Fullscreen -->
+<div class="modal fade modal-fullscreen" id="modal-fullscreen1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title" id="myModalLabel">Subscribe</h4>
+            </div>
+            <div class="modal-body">
+                Subscription request sent.Will contact you soon
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Done</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    function loadHeader(props){
+        var tr="<tr>";
+        for(var k in props){
+            tr+=`<th>${k}</th>`;
+        }
+        return tr+"<th>Action</th></tr>";
+    }
+
+    function loadProperties(props){
+        var tr="<tr>";
+        for(var k in props){
+            tr+=`<td>${props[k]}</td>`;
+        }
+        return tr+'<td><button class="btn btn-primary" data-toggle="modal" data-target="#modal-fullscreen" >Preview</button> <button class="btn btn-primary"  data-toggle="modal" data-target="#modal-fullscreen1">Subscribe</button></td></tr>';
+    }
+
+    function loadxyz(){
+        let xyz = new XYZ("3xZAbDxG","9JAzxE0oeWF4n4H9ghy8Jw");
+        xyz.fetch(1000).then(data=>{
+           if(data.features && data.features.length>0){
+               $("#dataTable thead").append(loadHeader(data.features[0].properties));
+           }
+           data.features.forEach(x=>{
+                $("#dataTable").append(loadProperties(x.properties));
+           });
+        });
+    }
+
+    $(document).ready(function(){
+        loadxyz();
+    });
+</script>
+</body>
+</html>
